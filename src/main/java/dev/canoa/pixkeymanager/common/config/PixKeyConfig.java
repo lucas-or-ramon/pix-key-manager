@@ -4,24 +4,28 @@ import dev.canoa.pixkeymanager.domain.ports.outbound.*;
 import dev.canoa.pixkeymanager.domain.services.CreatePixKeyService;
 import dev.canoa.pixkeymanager.domain.services.GetPixKeyService;
 import dev.canoa.pixkeymanager.domain.services.UpdatePixKeyService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor
 public class PixKeyConfig {
 
+    private final PixKeyRepository pixKeyRepository;
+
     @Bean
-    public CreatePixKeyService createPixKeyService(CountPixKeyPort countPixKeyPort, CreatePixKeyPort createPixKeyPort, ExistsPixKeyPort existsPixKeyPort) {
-        return new CreatePixKeyService(countPixKeyPort, createPixKeyPort, existsPixKeyPort);
+    public CreatePixKeyService createPixKeyService(IdGenerator idGenerator) {
+        return new CreatePixKeyService(idGenerator, pixKeyRepository);
     }
 
     @Bean
-    public GetPixKeyService getPixKeyService(GetPixKeyPort getPixKeyPort) {
-        return new GetPixKeyService(getPixKeyPort);
+    public GetPixKeyService getPixKeyService() {
+        return new GetPixKeyService(pixKeyRepository);
     }
 
     @Bean
-    public UpdatePixKeyService updatePixKeyService(GetPixKeyPort getPixKeyPort, UpdatePixKeyPort updatePixKeyPort) {
-        return new UpdatePixKeyService(getPixKeyPort, updatePixKeyPort);
+    public UpdatePixKeyService updatePixKeyService() {
+        return new UpdatePixKeyService(pixKeyRepository);
     }
 }

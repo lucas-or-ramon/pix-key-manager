@@ -1,18 +1,35 @@
 package dev.canoa.pixkeymanager.domain.services;
 
+import dev.canoa.pixkeymanager.domain.model.GetPixKey;
 import dev.canoa.pixkeymanager.domain.model.PixKey;
 import dev.canoa.pixkeymanager.domain.ports.inbound.GetPixKeyUseCase;
-import dev.canoa.pixkeymanager.domain.ports.outbound.GetPixKeyPort;
+import dev.canoa.pixkeymanager.domain.ports.outbound.PixKeyRepository;
+import lombok.AllArgsConstructor;
 
+import java.util.List;
+
+@AllArgsConstructor
 public class GetPixKeyService implements GetPixKeyUseCase {
 
-    private final GetPixKeyPort getPixKeyPort;
+    private final PixKeyRepository pixKeyRepository;
 
-    public GetPixKeyService(GetPixKeyPort getPixKeyPort) {
-        this.getPixKeyPort = getPixKeyPort;
-    }
     @Override
-    public PixKey getPixKey(String key) {
-        return getPixKeyPort.getPixKey(key);
+    public List<PixKey> getPixKeys(GetPixKey params) {
+        if (!params.isValid()) {
+            throw new IllegalArgumentException("Parâmetros inválidos");
+        }
+
+        List<PixKey> pixKeys;
+        if (params.id() != null) {
+            pixKeys = List.of(pixKeyRepository.findByKey(params.id()));
+        } else {
+            pixKeys = pixKeyRepository.findWith(params);
+        }
+
+        if (pixKeys.isEmpty()) {
+            throw new IllegalArgumentException("Chave Pix não encontrada");
+        }
+
+        return pixKeys;
     }
 }

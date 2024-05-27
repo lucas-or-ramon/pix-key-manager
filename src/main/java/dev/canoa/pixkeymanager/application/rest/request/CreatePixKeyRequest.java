@@ -3,8 +3,6 @@ package dev.canoa.pixkeymanager.application.rest.request;
 import dev.canoa.pixkeymanager.domain.model.*;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
 @Builder
 public record CreatePixKeyRequest(
         String keyType,

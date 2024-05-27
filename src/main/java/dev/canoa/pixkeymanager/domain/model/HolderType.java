@@ -11,7 +11,7 @@ public enum HolderType {
 
     private final String description;
 
-    public boolean isValidNumberOfKeys(int numberOfKeys) {
+    public boolean isValidNumberOfKeys(long numberOfKeys) {
         if (this.equals(NATURAL_PERSON)) {
             return numberOfKeys >= 0 && numberOfKeys <= 5;
         } else if (this.equals(LEGAL_PERSON)) {
