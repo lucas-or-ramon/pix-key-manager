@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -23,8 +25,8 @@ public class PixKeyEntity {
     Integer accountNumber;
     String accountHolderName;
     String accountHolderLastName;
-    String inclusionDateTime;
-    String deactivationDateTime;
+    LocalDateTime inclusionDateTime;
+    LocalDateTime deactivationDateTime;
 
     public static PixKeyEntity fromModel(PixKey pixKey) {
         return new PixKeyEntity(
@@ -37,7 +39,7 @@ public class PixKeyEntity {
                 pixKey.account().holderName(),
                 pixKey.account().holderLastName(),
                 pixKey.inclusionDateTime(),
-                null
+                pixKey.deactivationDateTime()
         );
     }
 
@@ -56,6 +58,7 @@ public class PixKeyEntity {
                 .key(key)
                 .account(account)
                 .inclusionDateTime(this.inclusionDateTime)
+                .deactivationDateTime(this.deactivationDateTime)
                 .build();
     }
 }

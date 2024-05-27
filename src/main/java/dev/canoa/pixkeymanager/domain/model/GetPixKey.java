@@ -2,14 +2,12 @@ package dev.canoa.pixkeymanager.domain.model;
 
 import dev.canoa.pixkeymanager.domain.model.validation.NullOrNotBlank;
 import dev.canoa.pixkeymanager.domain.model.validation.ValueOfEnum;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 public record GetPixKey(
@@ -32,19 +30,19 @@ public record GetPixKey(
         @NullOrNotBlank(message = "Nome do Titular da Conta (accountHolderName) não pode ser vazio")
         String accountHolderName,
 
-        @NullOrNotBlank(message = "Data de inclusão da chave (inclusionDateTime) não pode ser vazia")
-        String inclusionDateTime,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        LocalDate inclusionDateTime,
 
-        @NullOrNotBlank(message = "Data de inativação da chave (deactivationDateTime) não pode ser vazia")
-        String deactivationDateTime
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        LocalDate deactivationDateTime
 ) {
 
     public boolean isValid() {
-        if (id != null && (keyType != null || branchNumber != null || accountNumber != null || isNullOrEmpty(accountHolderName) || isNullOrEmpty(inclusionDateTime) || isNullOrEmpty(deactivationDateTime))) {
+        if (id != null && (keyType != null || branchNumber != null || accountNumber != null || isNotNullAndNotEmpty(accountHolderName) || inclusionDateTime != null || deactivationDateTime != null)) {
             throw new IllegalArgumentException("Se informar o ID para consulta, nenhum outro filtro pode ser aceito.");
         }
 
-        if (isNullOrEmpty(inclusionDateTime) && isNullOrEmpty(deactivationDateTime)) {
+        if (inclusionDateTime != null && deactivationDateTime != null) {
             throw new IllegalArgumentException("Não permitir a combinação de filtros Data de inclusão da chave e Data da inativação da chave. Somente um ou outro.");
         }
 
@@ -55,7 +53,7 @@ public record GetPixKey(
         return true;
     }
 
-    private boolean isNullOrEmpty(String str) {
+    private boolean isNotNullAndNotEmpty(String str) {
         return str != null && !str.trim().isEmpty();
     }
 }

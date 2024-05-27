@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Constraint(validatedBy = PixKeyValueValidator.class)
 public @interface PixKeyValue {
-    String message() default "must be valid key";
+    String message() default "Chave Pix inválida";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

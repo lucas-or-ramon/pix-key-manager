@@ -30,7 +30,7 @@ public class GetPixKeyServiceTest {
         when(params.isValid()).thenReturn(true);
         when(params.id()).thenReturn("validId");
         PixKey pixKey = mock(PixKey.class);
-        when(pixKeyRepository.findByKey("validId")).thenReturn(pixKey);
+        when(pixKeyRepository.findById("validId")).thenReturn(pixKey);
 
         List<PixKey> result = getPixKeyService.getPixKeys(params);
 

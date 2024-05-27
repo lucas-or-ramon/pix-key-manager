@@ -23,11 +23,13 @@ public final class GetPixKeySpecification {
             if (params.accountHolderName() != null && !params.accountHolderName().trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("accountHolderName"), params.accountHolderName()));
             }
-            if (params.inclusionDateTime() != null && !params.inclusionDateTime().trim().isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("inclusionDateTime"), params.inclusionDateTime()));
+            if (params.inclusionDateTime() != null) {
+                predicates.add(criteriaBuilder.between(root.get("inclusionDateTime"), params.inclusionDateTime().atStartOfDay(), params.inclusionDateTime().plusDays(1).atStartOfDay()));
             }
-            if (params.deactivationDateTime() != null && !params.deactivationDateTime().trim().isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("deactivationDateTime"), params.deactivationDateTime()));
+            if (params.deactivationDateTime() != null) {
+                predicates.add(criteriaBuilder.between(root.get("deactivationDateTime"), params.deactivationDateTime().atStartOfDay(), params.deactivationDateTime().plusDays(1).atStartOfDay()));
+            } else {
+                predicates.add(criteriaBuilder.isNull(root.get("deactivationDateTime")));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

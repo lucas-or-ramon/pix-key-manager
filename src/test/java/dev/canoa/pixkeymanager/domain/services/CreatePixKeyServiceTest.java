@@ -30,12 +30,11 @@ public class CreatePixKeyServiceTest {
         CreatePixKey pixKey = mock(CreatePixKey.class);
         when(idGenerator.generate()).thenReturn("generatedId");
         when(pixKeyRepository.existsId("generatedId")).thenReturn(false);
-        when(pixKeyRepository.existsKeyValue(anyString())).thenReturn(false);
-        when(pixKeyRepository.existsKeyType(any(KeyType.class), anyInt(), anyInt())).thenReturn(false);
+        when(pixKeyRepository.findByKeyValue(anyString())).thenReturn(null);
         when(pixKeyRepository.create(any(PixKey.class))).thenReturn("createdId");
         when(pixKey.account()).thenReturn(mock(Account.class));
         when(pixKey.key()).thenReturn(mock(Key.class));
-        when(pixKeyRepository.count(any(HolderType.class), anyInt(), anyInt())).thenReturn(0L);
+        when(pixKeyRepository.count(anyInt(), anyInt())).thenReturn(0L);
 
         String result = createPixKeyService.execute(pixKey);
 
@@ -63,7 +62,6 @@ public class CreatePixKeyServiceTest {
         when(pixKey.key()).thenReturn(key);
         when(idGenerator.generate()).thenReturn("generatedId");
         when(pixKeyRepository.existsId("generatedId")).thenReturn(false);
-        when(pixKeyRepository.existsKeyValue("existingKeyValue")).thenReturn(true);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             createPixKeyService.execute(pixKey);
@@ -84,14 +82,13 @@ public class CreatePixKeyServiceTest {
         when(pixKey.account()).thenReturn(account);
         when(idGenerator.generate()).thenReturn("generatedId");
         when(pixKeyRepository.existsId("generatedId")).thenReturn(false);
-        when(pixKeyRepository.existsKeyValue(anyString())).thenReturn(false);
-        when(pixKeyRepository.existsKeyType(KeyType.CPF, 1234, 5678)).thenReturn(true);
+        when(pixKeyRepository.findByKeyValue(anyString())).thenReturn(null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             createPixKeyService.execute(pixKey);
         });
 
-        assertEquals("Tipo de chave Pix já cadastrada", exception.getMessage());
+        assertEquals("Tipo de chave Pix já cadastrada para esta conta", exception.getMessage());
     }
 
     @Test
@@ -104,9 +101,8 @@ public class CreatePixKeyServiceTest {
         when(pixKey.key()).thenReturn(mock(Key.class));
         when(idGenerator.generate()).thenReturn("generatedId");
         when(pixKeyRepository.existsId("generatedId")).thenReturn(false);
-        when(pixKeyRepository.existsKeyValue(anyString())).thenReturn(false);
-        when(pixKeyRepository.existsKeyType(any(KeyType.class), anyInt(), anyInt())).thenReturn(false);
-        when(pixKeyRepository.count(any(HolderType.class), eq(1234), eq(5678))).thenReturn(21L);
+        when(pixKeyRepository.findByKeyValue(anyString())).thenReturn(null);
+        when(pixKeyRepository.count(eq(1234), eq(5678))).thenReturn(21L);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             createPixKeyService.execute(pixKey);

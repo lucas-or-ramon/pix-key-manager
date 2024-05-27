@@ -42,7 +42,7 @@ public enum KeyType {
         } else if (this == EMAIL) {
             return key.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
         } else if (this == PHONE) {
-            return key.matches("^\\+[0-9]{2}[0-9]{2}[0-9]{9}$");
+            return key.matches("^\\+[0-9]{2}[0-9]{3}[0-9]{9}$");
         } else if (this == RANDOM) {
             return key.matches("^[a-zA-Z0-9]{1,36}$");
         } else {

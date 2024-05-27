@@ -26,7 +26,7 @@ public class UpdatePixKeyService implements UpdatePixKeyUseCase {
     }
 
     private PixKey getExistingPixKey(String id) {
-        PixKey pixKey = pixKeyRepository.findByKey(id);
+        PixKey pixKey = pixKeyRepository.findById(id);
         if (pixKey == null) {
             throw new IllegalArgumentException("Chave Pix não encontrada");
         }

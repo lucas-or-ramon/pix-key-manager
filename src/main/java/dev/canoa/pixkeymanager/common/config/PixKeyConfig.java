@@ -2,6 +2,7 @@ package dev.canoa.pixkeymanager.common.config;
 
 import dev.canoa.pixkeymanager.domain.ports.outbound.*;
 import dev.canoa.pixkeymanager.domain.services.CreatePixKeyService;
+import dev.canoa.pixkeymanager.domain.services.DeletePixKeyService;
 import dev.canoa.pixkeymanager.domain.services.GetPixKeyService;
 import dev.canoa.pixkeymanager.domain.services.UpdatePixKeyService;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,10 @@ public class PixKeyConfig {
     @Bean
     public UpdatePixKeyService updatePixKeyService() {
         return new UpdatePixKeyService(pixKeyRepository);
+    }
+
+    @Bean
+    public DeletePixKeyService deletePixKeyService() {
+        return new DeletePixKeyService(pixKeyRepository);
     }
 }

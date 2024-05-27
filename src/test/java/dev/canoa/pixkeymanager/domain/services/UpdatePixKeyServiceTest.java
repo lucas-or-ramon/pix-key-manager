@@ -24,7 +24,7 @@ public class UpdatePixKeyServiceTest {
     public void whenExecuteWithExistingPixKey_thenUpdateIsSuccessful() {
         PixKey existingPixKey = mock(PixKey.class);
         Account account = mock(Account.class);
-        when(pixKeyRepository.findByKey(anyString())).thenReturn(existingPixKey);
+        when(pixKeyRepository.findById(anyString())).thenReturn(existingPixKey);
         when(pixKeyRepository.update(any(PixKey.class))).thenReturn(existingPixKey);
 
         PixKey result = updatePixKeyService.execute("existingId", account);
@@ -35,7 +35,7 @@ public class UpdatePixKeyServiceTest {
     @Test
     public void whenExecuteWithNonExistingPixKey_thenExceptionIsThrown() {
         Account account = mock(Account.class);
-        when(pixKeyRepository.findByKey(anyString())).thenReturn(null);
+        when(pixKeyRepository.findById(anyString())).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class, () -> updatePixKeyService.execute("nonExistingId", account));
     }

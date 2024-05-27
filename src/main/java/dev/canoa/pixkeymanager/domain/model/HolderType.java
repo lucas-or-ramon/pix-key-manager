@@ -19,5 +19,10 @@ public enum HolderType {
         }
         throw new IllegalArgumentException("Tipo de proprietário inválido");
     }
+
+    public boolean containsValidKeyType(KeyType keyType) {
+        return (!this.equals(NATURAL_PERSON) || !keyType.equals(KeyType.CNPJ)) &&
+                (!this.equals(LEGAL_PERSON) || !keyType.equals(KeyType.CPF));
+    }
 }
 

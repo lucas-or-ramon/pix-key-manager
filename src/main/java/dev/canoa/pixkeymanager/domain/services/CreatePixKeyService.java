@@ -16,11 +16,13 @@ public class CreatePixKeyService implements CreatePixKeyUseCase {
 
     @Override
     public String execute(CreatePixKey pixKey) {
+        HolderType holderType = HolderType.NATURAL_PERSON; // TODO: Não estava na especificação como obter o tipo de proprietário
+
         PixKey newPixKey = PixKey.builder()
                 .id(this.getId())
                 .key(this.getKey(pixKey))
-                .account(this.getAccount(pixKey.account()))
-                .inclusionDateTime(LocalDateTime.now().toString())
+                .account(this.getAccount(pixKey.account(), holderType))
+                .inclusionDateTime(LocalDateTime.now())
                 .build();
 
         return pixKeyRepository.create(newPixKey);
@@ -36,18 +38,15 @@ public class CreatePixKeyService implements CreatePixKeyUseCase {
     }
 
     private Key getKey(CreatePixKey pixKey) {
-        if (pixKeyRepository.existsKeyValue(pixKey.key().value())) {
+        PixKey existsKeyValue = pixKeyRepository.findByKeyValue(pixKey.key().value());
+        if (existsKeyValue != null && existsKeyValue.deactivationDateTime() == null) {
             throw new IllegalArgumentException("Chave Pix já cadastrada");
-        }
-        if (pixKeyRepository.existsKeyType(pixKey.key().type(), pixKey.account().branch(), pixKey.account().number())) {
-            throw new IllegalArgumentException("Tipo de chave Pix já cadastrada");
         }
         return pixKey.key();
     }
 
-    private Account getAccount(Account account) {
-        HolderType holderType = HolderType.LEGAL_PERSON; // TODO: Não estava na especificação como obter o tipo de proprietário
-        long total = pixKeyRepository.count(holderType, account.branch(), account.number());
+    private Account getAccount(Account account, HolderType holderType) {
+        long total = pixKeyRepository.count(account.branch(), account.number());
         if (!holderType.isValidNumberOfKeys(total)) {
             throw new IllegalArgumentException("Limite de chaves Pix inválido ou excedido");
         }
