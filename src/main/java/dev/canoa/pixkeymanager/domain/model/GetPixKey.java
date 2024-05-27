@@ -38,6 +38,10 @@ public record GetPixKey(
 ) {
 
     public boolean isValid() {
+        if (keyType == null && branchNumber == null && accountNumber == null && !isNotNullAndNotEmpty(accountHolderName) && inclusionDateTime == null && deactivationDateTime == null) {
+            throw new IllegalArgumentException("Pelo menos um filtro deve ser informado.");
+        }
+
         if (id != null && (keyType != null || branchNumber != null || accountNumber != null || isNotNullAndNotEmpty(accountHolderName) || inclusionDateTime != null || deactivationDateTime != null)) {
             throw new IllegalArgumentException("Se informar o ID para consulta, nenhum outro filtro pode ser aceito.");
         }

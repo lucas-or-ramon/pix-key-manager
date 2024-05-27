@@ -39,7 +39,7 @@ public class CreatePixKeyService implements CreatePixKeyUseCase {
 
     private Key getKey(CreatePixKey pixKey) {
         PixKey existsKeyValue = pixKeyRepository.findByKeyValue(pixKey.key().value());
-        if (existsKeyValue != null && existsKeyValue.deactivationDateTime() == null) {
+        if (existsKeyValue != null) {
             throw new IllegalArgumentException("Chave Pix já cadastrada");
         }
         return pixKey.key();

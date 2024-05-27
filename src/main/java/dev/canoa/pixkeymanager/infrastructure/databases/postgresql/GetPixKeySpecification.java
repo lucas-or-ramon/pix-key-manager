@@ -14,7 +14,7 @@ public final class GetPixKeySpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (params.keyType() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("keyType"), params.keyType().getType()));
+                predicates.add(criteriaBuilder.equal(root.get("keyType"), params.keyType().name()));
             }
             if (params.branchNumber() != null && params.accountNumber() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("branchNumber"), params.branchNumber()));

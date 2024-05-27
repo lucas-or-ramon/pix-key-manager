@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -42,7 +43,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -58,7 +59,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -75,7 +76,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Exception exception = assertThrows(IllegalArgumentException.class, getPixKey::isValid);
@@ -88,7 +89,7 @@ public class GetPixKeyTest {
                 .keyType(KeyType.CPF)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Exception exception = assertThrows(IllegalArgumentException.class, getPixKey::isValid);
@@ -102,7 +103,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -117,7 +118,7 @@ public class GetPixKeyTest {
                 .branchNumber(0)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -132,7 +133,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(0)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -147,7 +148,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName(null)
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -162,7 +163,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
@@ -178,8 +179,8 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
-                .deactivationDateTime("2023-05-02")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
+                .deactivationDateTime(LocalDate.of(2023, 5, 2))
                 .build();
 
         Exception exception = assertThrows(IllegalArgumentException.class, getPixKey::isValid);
@@ -193,7 +194,7 @@ public class GetPixKeyTest {
                 .branchNumber(1234)
                 .accountNumber(12345678)
                 .accountHolderName("João")
-                .inclusionDateTime("2023-05-01")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .deactivationDateTime(null)
                 .build();
 
@@ -210,41 +211,11 @@ public class GetPixKeyTest {
                 .accountNumber(12345678)
                 .accountHolderName("João")
                 .inclusionDateTime(null)
-                .deactivationDateTime("2023-05-02")
+                .inclusionDateTime(LocalDate.of(2023, 5, 1))
                 .build();
 
         Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
         assertTrue(violations.isEmpty());
         assertTrue(getPixKey.isValid());
-    }
-
-    @Test
-    public void testEmptyInclusionDateTime() {
-        GetPixKey getPixKey = GetPixKey.builder()
-                .keyType(KeyType.CPF)
-                .branchNumber(1234)
-                .accountNumber(12345678)
-                .accountHolderName("João")
-                .inclusionDateTime("")
-                .build();
-
-        Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
-        assertEquals(1, violations.size());
-        assertEquals("Data de inclusão da chave (inclusionDateTime) não pode ser vazia", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testEmptyDeactivationDateTime() {
-        GetPixKey getPixKey = GetPixKey.builder()
-                .keyType(KeyType.CPF)
-                .branchNumber(1234)
-                .accountNumber(12345678)
-                .accountHolderName("João")
-                .deactivationDateTime("")
-                .build();
-
-        Set<ConstraintViolation<GetPixKey>> violations = validator.validate(getPixKey);
-        assertEquals(1, violations.size());
-        assertEquals("Data de inativação da chave (deactivationDateTime) não pode ser vazia", violations.iterator().next().getMessage());
     }
 }

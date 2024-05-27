@@ -38,7 +38,8 @@ public class PixKeyAdapter implements PixKeyRepository {
     public long count(Integer branchNumber, Integer accountNumber) {
         return jpaPixKeyRepository.count((root, query, criteriaBuilder) -> criteriaBuilder.and(
                 criteriaBuilder.equal(root.get("branchNumber"), branchNumber),
-                criteriaBuilder.equal(root.get("accountNumber"), accountNumber)
+                criteriaBuilder.equal(root.get("accountNumber"), accountNumber),
+                criteriaBuilder.isNull(root.get("deactivationDateTime"))
         ));
     }
 
@@ -52,7 +53,10 @@ public class PixKeyAdapter implements PixKeyRepository {
     @Override
     public PixKey findByKeyValue(String key) {
         return jpaPixKeyRepository.findOne(
-                        (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("keyValue"), key)
+                        (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                                criteriaBuilder.equal(root.get("keyValue"), key),
+                                criteriaBuilder.isNull(root.get("deactivationDateTime"))
+                        )
                 )
                 .map(PixKeyEntity::toModel)
                 .orElse(null);
