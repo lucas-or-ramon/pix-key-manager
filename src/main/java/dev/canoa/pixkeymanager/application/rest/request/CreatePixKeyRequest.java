@@ -17,14 +17,14 @@ public record CreatePixKeyRequest(
 ) {
     public CreatePixKey toDomain() {
         return CreatePixKey.builder()
-                .keyType(KeyType.from(keyType))
-                .keyValue(keyValue)
-                .accountType(AccountType.from(accountType))
-                .branchNumber(branchNumber)
-                .accountNumber(accountNumber)
-                .accountHolderName(accountHolderName)
-                .accountHolderLastName(accountHolderLastName)
-                .inclusionDateTime(LocalDateTime.now().toString())
+                .key(new Key(KeyType.from(keyType), keyValue))
+                .account(Account.builder()
+                        .type(AccountType.from(accountType))
+                        .branch(branchNumber)
+                        .number(accountNumber)
+                        .holderName(accountHolderName)
+                        .holderLastName(accountHolderLastName)
+                        .build())
                 .build();
     }
 }

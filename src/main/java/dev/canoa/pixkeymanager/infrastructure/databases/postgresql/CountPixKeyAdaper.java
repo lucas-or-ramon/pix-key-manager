@@ -1,5 +1,6 @@
 package dev.canoa.pixkeymanager.infrastructure.databases.postgresql;
 
+import dev.canoa.pixkeymanager.domain.model.Account;
 import dev.canoa.pixkeymanager.domain.model.HolderType;
 import dev.canoa.pixkeymanager.domain.ports.outbound.CountPixKeyPort;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class CountPixKeyAdaper implements CountPixKeyPort {
 
     @Override
-    public int count(int accountNumber, int branchNumber, HolderType holderType) {
+    public int count(Account account, HolderType holderType) {
         return 0;
     }
 }

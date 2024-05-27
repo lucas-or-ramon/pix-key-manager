@@ -21,7 +21,7 @@ public class PixKeyConfig {
     }
 
     @Bean
-    public UpdatePixKeyService updatePixKeyService(UpdatePixKeyPort updatePixKeyPort) {
-        return new UpdatePixKeyService(updatePixKeyPort);
+    public UpdatePixKeyService updatePixKeyService(GetPixKeyPort getPixKeyPort, UpdatePixKeyPort updatePixKeyPort) {
+        return new UpdatePixKeyService(getPixKeyPort, updatePixKeyPort);
     }
 }
