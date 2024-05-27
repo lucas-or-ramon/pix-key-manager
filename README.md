@@ -2,6 +2,7 @@
 
 ## Débitos Técnicos
 - Finalizar testes unitários e incluir testes integrados
+- Ajustar atualização dos campos accountType e accountHolderName
 - Criar exceções customizadas
 - Criar anotações que agrupam várias validações
 - Incluir logs
