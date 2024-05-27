@@ -13,16 +13,11 @@ public enum HolderType {
 
     public boolean isValidNumberOfKeys(long numberOfKeys) {
         if (this.equals(NATURAL_PERSON)) {
-            return numberOfKeys >= 0 && numberOfKeys <= 5;
+            return numberOfKeys >= 0 && numberOfKeys < 5;
         } else if (this.equals(LEGAL_PERSON)) {
-            return numberOfKeys >= 0 && numberOfKeys <= 20;
+            return numberOfKeys >= 0 && numberOfKeys < 20;
         }
         throw new IllegalArgumentException("Tipo de proprietário inválido");
-    }
-
-    public boolean containsValidKeyType(KeyType keyType) {
-        return (!this.equals(NATURAL_PERSON) || !keyType.equals(KeyType.CNPJ)) &&
-                (!this.equals(LEGAL_PERSON) || !keyType.equals(KeyType.CPF));
     }
 }
 
