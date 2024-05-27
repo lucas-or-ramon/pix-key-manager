@@ -1,12 +1,17 @@
 package dev.canoa.pixkeymanager.domain.services;
 
+import dev.canoa.pixkeymanager.domain.model.CreatePixKey;
 import dev.canoa.pixkeymanager.domain.model.HolderType;
-import dev.canoa.pixkeymanager.domain.model.PixKey;
 import dev.canoa.pixkeymanager.domain.ports.inbound.CreatePixKeyUseCase;
-import dev.canoa.pixkeymanager.domain.ports.outbound.*;
+import dev.canoa.pixkeymanager.domain.ports.outbound.CountPixKeyPort;
+import dev.canoa.pixkeymanager.domain.ports.outbound.CreatePixKeyPort;
+import dev.canoa.pixkeymanager.domain.ports.outbound.ExistsPixKeyPort;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 @AllArgsConstructor
+@Validated
 public class CreatePixKeyService implements CreatePixKeyUseCase {
 
     private final CountPixKeyPort countPixKey;
@@ -14,15 +19,7 @@ public class CreatePixKeyService implements CreatePixKeyUseCase {
     private final ExistsPixKeyPort existsPixKey;
 
     @Override
-    public String execute(PixKey pixKey) {
-        if (pixKey == null) {
-            throw new IllegalArgumentException("Chave Pix não pode ser nulo");
-        }
-
-        if (!pixKey.isValid()) {
-            throw new IllegalArgumentException("Chave Pix inválida");
-        }
-
+    public String execute(@Valid CreatePixKey pixKey) {
         if (existsPixKey.exists(pixKey.keyValue())) {
             throw new IllegalArgumentException("Chave Pix já cadastrada");
         }

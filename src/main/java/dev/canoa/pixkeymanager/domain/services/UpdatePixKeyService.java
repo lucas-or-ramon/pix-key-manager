@@ -1,8 +1,10 @@
 package dev.canoa.pixkeymanager.domain.services;
 
 import dev.canoa.pixkeymanager.domain.model.PixKey;
+import dev.canoa.pixkeymanager.domain.model.UpdatePixKey;
 import dev.canoa.pixkeymanager.domain.ports.inbound.UpdatePixKeyUseCase;
 import dev.canoa.pixkeymanager.domain.ports.outbound.UpdatePixKeyPort;
+import jakarta.validation.Valid;
 
 public class UpdatePixKeyService implements UpdatePixKeyUseCase {
 
@@ -13,7 +15,7 @@ public class UpdatePixKeyService implements UpdatePixKeyUseCase {
     }
 
     @Override
-    public void updatePixKey(String key, PixKey pixKey) {
-        updatePixKeyPort.updatePixKey(key, pixKey);
+    public PixKey execute(String id, @Valid UpdatePixKey pixKey) {
+        return updatePixKeyPort.updatePixKey(id, pixKey);
     }
 }

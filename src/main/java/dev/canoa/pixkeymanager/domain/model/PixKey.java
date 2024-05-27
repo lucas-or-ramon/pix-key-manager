@@ -16,45 +16,35 @@ public record PixKey(
         String deactivationDateTime
 ) {
 
-    public boolean isValid() {
-        return isKeyValueValid() &&
-                isAccountTypeValid() &&
-                isBranchNumberValid() &&
-                isAccountNumberValid() &&
-                isAccountHolderNameValid() &&
-                isAccountHolderLastNameValid() &&
-                isInclusionDateTimeValid();
-    }
-
-    private boolean isKeyValueValid() {
+    public boolean isKeyValueValid() {
         return isKeyTypeValid() && keyType.isValid(keyValue);
     }
 
-    private boolean isKeyTypeValid() {
+    public boolean isKeyTypeValid() {
         return keyType != null;
     }
 
-    private boolean isAccountTypeValid() {
+    public boolean isAccountTypeValid() {
         return accountType != null;
     }
 
-    private boolean isAccountNumberValid() {
+    public boolean isAccountNumberValid() {
         return accountNumber.toString().length() <= 8;
     }
 
-    private boolean isBranchNumberValid() {
+    public boolean isBranchNumberValid() {
         return branchNumber.toString().length() <= 4;
     }
 
-    private boolean isAccountHolderNameValid() {
+    public boolean isAccountHolderNameValid() {
         return accountHolderName.length() <= 30;
     }
 
-    private boolean isAccountHolderLastNameValid() {
+    public boolean isAccountHolderLastNameValid() {
         return accountHolderLastName == null || accountHolderLastName.length() <= 45;
     }
 
-    private boolean isInclusionDateTimeValid() {
+    public boolean isInclusionDateTimeValid() {
         return inclusionDateTime != null;
     }
 }

@@ -2,9 +2,11 @@ package dev.canoa.pixkeymanager.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.validation.annotation.Validated;
 
 @Getter
 @AllArgsConstructor
+@Validated
 public enum KeyType {
 
     CPF("cpf"),

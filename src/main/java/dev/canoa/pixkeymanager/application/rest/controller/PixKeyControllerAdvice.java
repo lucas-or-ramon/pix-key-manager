@@ -1,5 +1,6 @@
 package dev.canoa.pixkeymanager.application.rest.controller;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +22,11 @@ public class PixKeyControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
         return ResponseEntity.unprocessableEntity().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(ConstraintViolationException exception) {
+        return ResponseEntity.unprocessableEntity().body(exception.getConstraintViolations().iterator().next().getMessage());
     }
 
     @ExceptionHandler(Exception.class)

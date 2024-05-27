@@ -1,7 +1,8 @@
 package dev.canoa.pixkeymanager.domain.ports.inbound;
 
 import dev.canoa.pixkeymanager.domain.model.PixKey;
+import dev.canoa.pixkeymanager.domain.model.UpdatePixKey;
 
 public interface UpdatePixKeyUseCase {
-    void updatePixKey(String key, PixKey pixKey);
+    PixKey execute(String id, UpdatePixKey pixKey);
 }

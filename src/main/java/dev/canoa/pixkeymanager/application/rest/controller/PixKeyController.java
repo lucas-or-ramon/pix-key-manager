@@ -1,17 +1,17 @@
 package dev.canoa.pixkeymanager.application.rest.controller;
 
 import dev.canoa.pixkeymanager.application.rest.request.CreatePixKeyRequest;
+import dev.canoa.pixkeymanager.application.rest.request.UpdatePixKeyRequest;
 import dev.canoa.pixkeymanager.application.rest.response.GetPixKeyResponse;
 import dev.canoa.pixkeymanager.domain.model.PixKey;
 import dev.canoa.pixkeymanager.domain.ports.inbound.CreatePixKeyUseCase;
 import dev.canoa.pixkeymanager.domain.ports.inbound.GetPixKeyUseCase;
 import dev.canoa.pixkeymanager.domain.ports.inbound.UpdatePixKeyUseCase;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/pix-keys")
+@RequestMapping("/api/v1/pix-keys")
 public class PixKeyController {
 
     private final GetPixKeyUseCase getPixKeyUseCase;
@@ -25,20 +25,20 @@ public class PixKeyController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createPixKey(@Valid @RequestBody CreatePixKeyRequest createPixKeyRequest) {
-        String id = createPixKeyUseCase.execute(createPixKeyRequest.toModel());
+    public ResponseEntity<String> createPixKey(@RequestBody CreatePixKeyRequest body) {
+        String id = createPixKeyUseCase.execute(body.toDomain());
         return ResponseEntity.ok(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PixKey> updatePixKey(@PathVariable String id, @RequestBody UpdatePixKeyRequest body) {
+        PixKey pixKey = updatePixKeyUseCase.execute(id, body.toDomain());
+        return ResponseEntity.ok().body(pixKey);
     }
 
     @GetMapping
     public ResponseEntity<GetPixKeyResponse> getPixKey() {
         PixKey pixKey = getPixKeyUseCase.getPixKey("");
-        return ResponseEntity.ok(GetPixKeyResponse.builder().build());
-    }
-
-    @PutMapping
-    public ResponseEntity<Void> updatePixKey(String key, @RequestBody PixKey pixKey) {
-        updatePixKeyUseCase.updatePixKey(key, pixKey);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(GetPixKeyResponse.fromDomain(pixKey));
     }
 }

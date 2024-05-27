@@ -1,7 +1,7 @@
 package dev.canoa.pixkeymanager.domain.ports.outbound;
 
-import dev.canoa.pixkeymanager.domain.model.PixKey;
+import dev.canoa.pixkeymanager.domain.model.CreatePixKey;
 
 public interface CreatePixKeyPort {
-    String createPixKey(PixKey pixKey);
+    String createPixKey(CreatePixKey pixKey);
 }
