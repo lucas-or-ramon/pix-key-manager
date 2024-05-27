@@ -1,11 +1,12 @@
 package dev.canoa.pixkeymanager.application.rest.controller;
 
-import dev.canoa.pixkeymanager.application.rest.controller.response.CreatePixKeyResponse;
-import dev.canoa.pixkeymanager.application.rest.controller.response.GetPixKeyResponse;
+import dev.canoa.pixkeymanager.application.rest.request.CreatePixKeyRequest;
+import dev.canoa.pixkeymanager.application.rest.response.GetPixKeyResponse;
 import dev.canoa.pixkeymanager.domain.model.PixKey;
 import dev.canoa.pixkeymanager.domain.ports.inbound.CreatePixKeyUseCase;
 import dev.canoa.pixkeymanager.domain.ports.inbound.GetPixKeyUseCase;
 import dev.canoa.pixkeymanager.domain.ports.inbound.UpdatePixKeyUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +24,16 @@ public class PixKeyController {
         this.updatePixKeyUseCase = updatePixKeyUseCase;
     }
 
+    @PostMapping
+    public ResponseEntity<String> createPixKey(@Valid @RequestBody CreatePixKeyRequest createPixKeyRequest) {
+        String id = createPixKeyUseCase.execute(createPixKeyRequest.toModel());
+        return ResponseEntity.ok(id);
+    }
+
     @GetMapping
     public ResponseEntity<GetPixKeyResponse> getPixKey() {
         PixKey pixKey = getPixKeyUseCase.getPixKey("");
-        return ResponseEntity.ok(new GetPixKeyResponse(""));
-    }
-
-    @PostMapping
-    public ResponseEntity<CreatePixKeyResponse> createPixKey(@RequestBody PixKey pixKey) {
-        createPixKeyUseCase.createPixKey(pixKey);
-        return ResponseEntity.ok(new CreatePixKeyResponse());
+        return ResponseEntity.ok(GetPixKeyResponse.builder().build());
     }
 
     @PutMapping

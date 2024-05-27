@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 public class CreatePixKeyAdapter implements CreatePixKeyPort {
 
     @Override
-    public void createPixKey(PixKey pixKey) {
+    public String createPixKey(PixKey pixKey) {
         // TODO Auto-generated method stub
+        return pixKey.keyType().getType();
     }
 }

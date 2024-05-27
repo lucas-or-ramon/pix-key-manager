@@ -10,6 +10,6 @@ public class GetPixKeyAdapter implements GetPixKeyPort {
     @Override
     public PixKey getPixKey(String key) {
         // TODO Auto-generated method stub
-        return new PixKey();
+        return PixKey.builder().build();
     }
 }
