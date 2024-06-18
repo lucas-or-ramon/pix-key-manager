@@ -3,35 +3,14 @@ package dev.canoa.pixkeymanager.application.account;
 import lombok.Builder;
 
 @Builder
-public record CheckingAccount(BaseAccount baseAccount) implements Account {
+public class CheckingAccount extends Account {
 
-    @Override
-    public String getId() {
-        return null;
+    public CheckingAccount(String id, Integer branch, Integer number, String holderName, String holderLastName) {
+        super(id, branch, number, holderName, holderLastName);
     }
 
     @Override
     public AccountType getType() {
         return AccountType.CHECKING;
-    }
-
-    @Override
-    public Integer getBranch() {
-        return baseAccount().branch();
-    }
-
-    @Override
-    public Integer getNumber() {
-        return baseAccount().number();
-    }
-
-    @Override
-    public String getHolderName() {
-        return baseAccount().holderName();
-    }
-
-    @Override
-    public String getHolderLastName() {
-        return baseAccount().holderLastName();
     }
 }

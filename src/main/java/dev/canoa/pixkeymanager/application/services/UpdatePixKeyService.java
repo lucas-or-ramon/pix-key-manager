@@ -7,7 +7,10 @@ import dev.canoa.pixkeymanager.application.PixKey;
 import dev.canoa.pixkeymanager.application.UpdatePixKeyUseCase;
 import dev.canoa.pixkeymanager.application.PixKeyRepository;
 import dev.canoa.pixkeymanager.application.key.KeyRepository;
+import io.jbock.util.Either;
 import lombok.AllArgsConstructor;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 public class UpdatePixKeyService implements UpdatePixKeyUseCase {
@@ -17,33 +20,37 @@ public class UpdatePixKeyService implements UpdatePixKeyUseCase {
     private final AccountRepository accountRepository;
 
     @Override
-    public PixKey execute(String id, Account account) {
-        PixKey existingPixKey = this.getExistingPixKey(id);
+    public Either<PixKey, Error> execute(String id, Account account) {
+        Optional<PixKey> existingPixKey = this.getExistingPixKey(id);
+        if (existingPixKey.isEmpty()) {
+            return Either.right(new Error("Chave Pix não encontrada"));
+        }
 
-        Account existingAccount = this.getExistingAccount(account.getBranch(), account.getNumber());
-        validatePixKeyLimit(existingAccount);
+        Optional<Account> existingAccount = this.getExistingAccount(account.getBranch(), account.getNumber());
+        if (existingAccount.isEmpty()) {
+            return Either.right(new Error("Conta não encontrada"));
+        }
 
-        PixKey newPixKey = this.getNewPixKey(existingPixKey, existingAccount);
+        if (!isPixKeyLimitValid(existingAccount.get())) {
+            return Either.right(new Error("Limite de chaves atingido"));
+        }
 
-        return pixKeyRepository.update(newPixKey);
+        PixKey newPixKey = this.getNewPixKey(existingPixKey.get(), existingAccount.get());
+        return Either.left(pixKeyRepository.update(newPixKey));
     }
 
-    private PixKey getExistingPixKey(String id) {
-        return pixKeyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Chave Pix não encontrada"));
+    private Optional<PixKey> getExistingPixKey(String id) {
+        return pixKeyRepository.findById(id);
     }
 
-    private Account getExistingAccount(Integer branch, Integer number) {
-        return accountRepository.findByBranchAndAccountNumber(branch, number)
-                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+    private Optional<Account> getExistingAccount(Integer branch, Integer number) {
+        return accountRepository.findByBranchAndAccountNumber(branch, number);
     }
 
-    private void validatePixKeyLimit(Account account) {
+    private boolean isPixKeyLimitValid(Account account) {
         HolderType holderType = HolderType.NATURAL_PERSON;
         long total = pixKeyRepository.count(account.getId());
-        if (!holderType.isValidNumberOfKeys(total)) {
-            throw new IllegalArgumentException("Limite de chaves Pix inválido ou excedido");
-        }
+        return holderType.isValidNumberOfKeys(total);
     }
 
     private PixKey getNewPixKey(PixKey pixKey, Account account) {

@@ -1,10 +1,10 @@
 package dev.canoa.pixkeymanager.application;
 
-import dev.canoa.pixkeymanager.application.PixKey;
+import io.jbock.util.Either;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 public interface CreatePixKeyUseCase {
-    String execute(@Valid PixKey pixKey);
+    Either<String, Error> execute(@Valid PixKey pixKey);
 }

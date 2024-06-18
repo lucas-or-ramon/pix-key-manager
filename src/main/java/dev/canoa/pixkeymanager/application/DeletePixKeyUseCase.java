@@ -1,7 +1,7 @@
 package dev.canoa.pixkeymanager.application;
 
-import dev.canoa.pixkeymanager.application.PixKey;
+import io.jbock.util.Either;
 
 public interface DeletePixKeyUseCase {
-    PixKey execute(String id);
+    Either<PixKey, Error> execute(String id);
 }

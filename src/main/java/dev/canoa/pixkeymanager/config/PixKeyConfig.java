@@ -1,6 +1,8 @@
 package dev.canoa.pixkeymanager.config;
 
 import dev.canoa.pixkeymanager.application.PixKeyRepository;
+import dev.canoa.pixkeymanager.application.account.AccountRepository;
+import dev.canoa.pixkeymanager.application.key.KeyRepository;
 import dev.canoa.pixkeymanager.application.services.CreatePixKeyService;
 import dev.canoa.pixkeymanager.application.services.DeletePixKeyService;
 import dev.canoa.pixkeymanager.application.services.GetPixKeyService;
@@ -14,11 +16,13 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class PixKeyConfig {
 
+    private final KeyRepository keyRepository;
     private final PixKeyRepository pixKeyRepository;
+    private final AccountRepository accountRepository;
 
     @Bean
     public CreatePixKeyService createPixKeyService(IdGenerator idGenerator) {
-        return new CreatePixKeyService(idGenerator, pixKeyRepository);
+        return new CreatePixKeyService(idGenerator, keyRepository, pixKeyRepository, accountRepository);
     }
 
     @Bean
@@ -28,7 +32,7 @@ public class PixKeyConfig {
 
     @Bean
     public UpdatePixKeyService updatePixKeyService() {
-        return new UpdatePixKeyService(pixKeyRepository);
+        return new UpdatePixKeyService(keyRepository, pixKeyRepository, accountRepository);
     }
 
     @Bean

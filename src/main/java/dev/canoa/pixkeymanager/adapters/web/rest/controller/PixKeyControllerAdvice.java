@@ -1,4 +1,4 @@
-package dev.canoa.pixkeymanager.adapters.rest.controller;
+package dev.canoa.pixkeymanager.adapters.web.rest.controller;
 
 import dev.canoa.pixkeymanager.application.exception.NotFoundPixKeyException;
 import jakarta.validation.ConstraintViolationException;

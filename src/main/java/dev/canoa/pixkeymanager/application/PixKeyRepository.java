@@ -1,8 +1,5 @@
 package dev.canoa.pixkeymanager.application;
 
-import dev.canoa.pixkeymanager.application.GetPixKey;
-import dev.canoa.pixkeymanager.application.PixKey;
-
 import java.util.List;
 import java.util.Optional;
 

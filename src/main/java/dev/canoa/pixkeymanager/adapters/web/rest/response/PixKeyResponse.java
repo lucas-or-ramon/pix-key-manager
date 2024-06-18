@@ -1,4 +1,4 @@
-package dev.canoa.pixkeymanager.adapters.rest.response;
+package dev.canoa.pixkeymanager.adapters.web.rest.response;
 
 import dev.canoa.pixkeymanager.application.PixKey;
 import lombok.Builder;

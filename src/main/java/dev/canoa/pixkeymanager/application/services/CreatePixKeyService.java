@@ -9,6 +9,7 @@ import dev.canoa.pixkeymanager.application.account.HolderType;
 import dev.canoa.pixkeymanager.application.key.Key;
 import dev.canoa.pixkeymanager.application.key.KeyRepository;
 import dev.canoa.pixkeymanager.application.uuid.IdGenerator;
+import io.jbock.util.Either;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -22,45 +23,52 @@ public class CreatePixKeyService implements CreatePixKeyUseCase {
     private final PixKeyRepository pixKeyRepository;
     private final AccountRepository accountRepository;
 
-    public String execute(@Valid PixKey pixKey) {
-        verifyKeyNotExists(pixKey.key().getValue());
-
-        Key key = keyRepository.create(pixKey.key());
-        Account account = findOrCreateAccount(pixKey.account());
-
-        validatePixKeyLimit(account);
-
-        String id = generateUniquePixKeyId();
-        PixKey newPixKey = createNewPixKey(id, key, account);
-
-        return pixKeyRepository.create(newPixKey).id();
-    }
-
-    private void verifyKeyNotExists(String keyValue) {
-        if (keyRepository.findByValue(keyValue).isPresent()) {
-            throw new IllegalArgumentException("Chave Pix já cadastrada");
+    public Either<String, Error> execute(@Valid PixKey pixKey) {
+        if (isKeyExisting(pixKey.key().getValue())) {
+            return Either.right(new Error("Chave já cadastrada"));
         }
+
+        Key key = createKey(pixKey.key());
+        Account account = getOrCreateAccount(pixKey.account());
+
+        if (!isPixKeyLimitValid(account)) {
+            return Either.right(new Error("Limite de chaves atingido"));
+        }
+
+        Either<String, Error> uniquePixKeyId = generateUniquePixKeyId();
+        if (uniquePixKeyId.isRight() || uniquePixKeyId.getLeft().isEmpty()) {
+            return uniquePixKeyId;
+        }
+
+        PixKey newPixKey = createNewPixKey(uniquePixKeyId.getLeft().get(), key, account);
+        return Either.left(pixKeyRepository.create(newPixKey).id());
     }
 
-    private Account findOrCreateAccount(Account accountData) {
+    private boolean isKeyExisting(String keyValue) {
+        return keyRepository.findByValue(keyValue).isPresent();
+    }
+
+    private Key createKey(Key key) {
+        return keyRepository.create(key);
+    }
+
+    private Account getOrCreateAccount(Account accountData) {
         return accountRepository.findByBranchAndAccountNumber(accountData.getBranch(), accountData.getNumber())
                 .orElseGet(() -> accountRepository.create(accountData));
     }
 
-    private void validatePixKeyLimit(Account account) {
+    private boolean isPixKeyLimitValid(Account account) {
         HolderType holderType = HolderType.NATURAL_PERSON;
         long total = pixKeyRepository.count(account.getId());
-        if (!holderType.isValidNumberOfKeys(total)) {
-            throw new IllegalArgumentException("Limite de chaves Pix inválido ou excedido");
-        }
+        return holderType.isValidNumberOfKeys(total);
     }
 
-    private String generateUniquePixKeyId() {
+    private Either<String, Error> generateUniquePixKeyId() {
         String id = idGenerator.generate();
         if (pixKeyRepository.findById(id).isPresent()) {
-            throw new IllegalStateException("Id já existe");
+            return Either.right(new Error("Erro ao gerar ID único"));
         }
-        return id;
+        return Either.left(id);
     }
 
     private PixKey createNewPixKey(String id, Key key, Account account) {

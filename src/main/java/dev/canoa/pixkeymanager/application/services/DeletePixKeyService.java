@@ -3,6 +3,7 @@ package dev.canoa.pixkeymanager.application.services;
 import dev.canoa.pixkeymanager.application.PixKey;
 import dev.canoa.pixkeymanager.application.DeletePixKeyUseCase;
 import dev.canoa.pixkeymanager.application.PixKeyRepository;
+import io.jbock.util.Either;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -13,15 +14,15 @@ public class DeletePixKeyService implements DeletePixKeyUseCase {
 
     private final PixKeyRepository pixKeyRepository;
     @Override
-    public PixKey execute(String id) {
+    public Either<PixKey, Error> execute(String id) {
         Optional<PixKey> optionalPixKey = pixKeyRepository.findById(id);
         if (optionalPixKey.isEmpty()) {
-            throw new IllegalArgumentException("Chave Pix não encontrada");
+            return Either.right(new Error("Chave Pix não encontrada"));
         }
         PixKey pixKey = optionalPixKey.get();
 
         if (pixKey.deactivationDateTime() != null) {
-            throw new IllegalArgumentException("Chave Pix já desativada");
+            return Either.right(new Error("Chave Pix já desativada"));
         }
 
         PixKey updatedPixKey = PixKey.builder()
@@ -32,6 +33,6 @@ public class DeletePixKeyService implements DeletePixKeyUseCase {
                 .deactivationDateTime(LocalDateTime.now())
                 .build();
 
-        return pixKeyRepository.update(updatedPixKey);
+        return Either.left(pixKeyRepository.update(updatedPixKey));
     }
 }

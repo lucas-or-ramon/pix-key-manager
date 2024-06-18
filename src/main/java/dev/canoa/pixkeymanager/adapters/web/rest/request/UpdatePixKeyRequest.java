@@ -1,4 +1,4 @@
-package dev.canoa.pixkeymanager.adapters.rest.request;
+package dev.canoa.pixkeymanager.adapters.web.rest.request;
 
 import dev.canoa.pixkeymanager.application.account.Account;
 import dev.canoa.pixkeymanager.application.account.AccountType;

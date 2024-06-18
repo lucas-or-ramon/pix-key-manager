@@ -7,6 +7,7 @@ import dev.canoa.pixkeymanager.application.key.Key;
 import dev.canoa.pixkeymanager.application.key.KeyType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,15 +23,12 @@ import java.time.LocalDateTime;
 public class PixKeyEntity {
     @Id
     String id;
-    String keyType;
-    String keyValue;
-    String accountType;
-    Integer branchNumber;
-    Integer accountNumber;
-    String accountHolderName;
-    String accountHolderLastName;
-    LocalDateTime inclusionDateTime;
-    LocalDateTime deactivationDateTime;
+
+    @OneToOne
+    KeyEntity key;
+
+    @OneToOne
+    AccountEntity account;
 
     public static PixKeyEntity fromModel(PixKey pixKey) {
         return new PixKeyEntity(
